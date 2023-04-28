@@ -1,62 +1,102 @@
-import { useState } from 'react';
+import React,{ useState } from 'react';
+import { useDispatch } from 'react-redux';
+import store from '../../utils/store';
+
+// Firebase imports
+import { db } from '../lib/firebase';
+import { getDatabase, onValue, ref, get , push , set } from "firebase/database";
+
+// UI component imports
+import Image from 'next/image'
+import { Modal, Button } from 'react-bootstrap';
+
+// Styling imports
 import styles from '@/styles/calendar.module.css'
 import stylesMadal from '@/styles/modal.module.css'
-
-import { momentLocalizer } from 'react-big-calendar';
-import moment from 'moment';
-import Image from 'next/image'
-//Bootstrap
-import { Modal, Button } from 'react-bootstrap';
+import 'react-big-calendar/lib/sass/styles.scss';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+// Calendar library imports
+import { momentLocalizer } from 'react-big-calendar';
+import moment from 'moment';
+
+// Image imports
 import arrowLeftImg  from '../../public/images/arrowLeft.png'
 import arrowRightImg from '../../public/images/arrowRight.png'
 import arrowDownImg  from '../../public/images/arrowDown.png'
 import plusButtonImg from '../../public/images/plus.png'
 
 
-import 'react-big-calendar/lib/sass/styles.scss';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
-
-
 const CustomToolbar = (toolbar) => {
    
-   const goToPrev = () => {toolbar.onNavigate('PREV');}; //OnClick Lower the month 
-   const goToNext = () => {toolbar.onNavigate('NEXT');}; //OnClick Upper the month 
+    const goToPrev = () => {toolbar.onNavigate('PREV');}; //OnClick Lower the month 
+    const goToNext = () => {toolbar.onNavigate('NEXT');}; //OnClick Upper the month 
  
-   //modal
-   const [showModal, setShowModal] = useState(false);
-   const [eventName, setEventName] = useState('');
-   const [eventDescription, setEventDescription] = useState('');
+    // State for modal and input values
+    const [showModal, setShowModal] = useState(false);
+    const [eventName, setEventName] = useState('');
+    const [eventDescription, setEventDescription] = useState('');
+    const [eventStartDate, setEventStartDate] = useState('');
+    const [formErrors, setFormErrors] = useState({
+      eventName: '',
+      eventStartDate: '',
+      eventDescription: '',
+    });
+    const [showDropdown, setShowDropdown] = useState(false);
 
-   const [eventStartDate, setEventStartDate] = useState('');
-   
-const handleFormSubmit = (e) => {
-   e.preventDefault();
-   const event = {
-     name: eventName,
-     startDate: eventStartDate,
-     description: eventDescription,
-   };
-   console.log(event)
+    const dispatch = useDispatch();
 
 
-   setShowModal(false);
- };
+
+    const handleFormSubmit = (e) => {
+      e.preventDefault();
+      const now = new Date().toISOString().split('T')[0];
+      if (eventStartDate < now) {//Time Err Handler
+        alert(`Обарана дата - ${eventStartDate} не може бути добавлена, введіть коректну дату - сьогоднішню або майбутню 🙂`);
+      return;
+      }
+      const event = {
+        title: eventName,
+        start: eventStartDate,
+        end: eventStartDate,
+        description: eventDescription,
+      };
+      dispatch({ type: 'SET_EVENT', payload: event });
+     
+      const uid = store.getState().uid;
+      try {
+        const eventsRef = ref(db, `UserData/${uid}/events/${event.title}`);//add events to firebase db
+        set(eventsRef, {
+          title: event.title,
+          start: event.start,
+          end: event.end,
+          description: event.description,
+        });
+        setShowModal(false);
+      }
+      catch(err){
+      console.log(err)
+      }
+    };
 
 
-   const currentDate = moment(toolbar.date).format('MMMM YYYY');
-   const nowDate = moment().format('MMMM DD');
-   const Month = moment(toolbar.date).format('MMMM');
+    const handleCloseModal = (e) => {//close modal -Close btn-
+    e.preventDefault();
+    setShowModal(false);
+    };
 
-   const handleMonthChange = (e) => {
+    //format times
+    const currentDate = moment(toolbar.date).format('MMMM YYYY');
+    const nowDate = moment().format('MMMM DD');
+    const Month = moment(toolbar.date).format('MMMM');
+
+    const handleMonthChange = (e) => {
       const month = parseInt(e.target.getAttribute('data-month'));
       const newDate = moment(toolbar.date).month(month);
       toolbar.onNavigate('DATE', newDate);
       setShowDropdown(false);
-   };
-   
-   const [showDropdown, setShowDropdown] = useState(false);
+    };
    const toggleDropdown = () => setShowDropdown(!showDropdown);
    
 
@@ -125,7 +165,7 @@ const handleFormSubmit = (e) => {
     <Modal.Title>Add Event</Modal.Title>
   </Modal.Header>
   <Modal.Body>
-    <form onSubmit={handleFormSubmit}>
+    <form>
       <div className={stylesMadal.form_group}>
         <label htmlFor="eventName"></label>
         <input
@@ -160,8 +200,8 @@ const handleFormSubmit = (e) => {
       </div>
       <div className={stylesMadal.modal_control}>
 
-      <Button type="submit"className={stylesMadal.cancel_btn}>Cancel</Button>
-      <Button type="submit"className={stylesMadal.save_btn}>Save</Button>
+      <Button type="submit"className={stylesMadal.cancel_btn} onClick={handleCloseModal}>Cancel</Button>
+      <Button type="submit"className={stylesMadal.save_btn} onClick={handleFormSubmit}>Save</Button>
 
       </div>
       
