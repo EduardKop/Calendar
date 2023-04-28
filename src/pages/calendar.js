@@ -145,7 +145,7 @@ import { db } from '../../src/lib/firebase';
           className={styles.calendar}
           style={{
             height: '100%',
-            width: '100%',
+            width: '90%',
             backgroundColor: '#FFFF',
             border: 'none',
           }}
