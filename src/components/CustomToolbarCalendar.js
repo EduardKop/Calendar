@@ -69,18 +69,16 @@ const CustomToolbar = (toolbar) => {
         // const uid = store.getState().uid;
         const uid = localStorage.getItem('uid');
         console.log(uid);
-        const eventsRef = ref(db, `UserData/${uid}/events/${eventName}`);//add events to firebase db
+        const newEventRef = push(ref(db, `UserData/${uid}/events`));//add events to firebase db
         // onValue(eventsRef, (snapshot) => {
         //   const data = snapshot.val()
         //   console.log(data)
         // })
-        set(eventsRef, {
-       
-            title: event.title,
-            start: event.start,
-            end: event.end,
-            description: event.description,
-          
+        set(newEventRef, {
+          title: event.title,
+          start: event.start,
+          end: event.end,
+          description: event.description,
         });
         setShowModal(false);
       }
