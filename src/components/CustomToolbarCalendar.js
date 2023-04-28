@@ -64,14 +64,22 @@ const CustomToolbar = (toolbar) => {
       };
       dispatch({ type: 'SET_EVENT', payload: event });
      
-      const uid = store.getState().uid;
       try {
+        // const uid = store.getState().uid;
+        const uid = localStorage.getItem('uid');
+        console.log(uid);
         const eventsRef = ref(db, `UserData/${uid}/events/${event.title}`);//add events to firebase db
+        // onValue(eventsRef, (snapshot) => {
+        //   const data = snapshot.val()
+        //   console.log(data)
+        // })
         set(eventsRef, {
-          title: event.title,
-          start: event.start,
-          end: event.end,
-          description: event.description,
+       
+            title: event.title,
+            start: event.start,
+            end: event.end,
+            description: event.description,
+          
         });
         setShowModal(false);
       }

@@ -66,7 +66,27 @@ export  function MyCalendar() {
           });
     }
   }, [user]);
-
+  
+  useEffect(() => {
+    const uid = store.getState().uid;
+    if (uid && user) {
+      const eventsRef = ref(db, `UserData/${uid}/events`);
+      onValue(eventsRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          const newEvents = Object.keys(data).map((key) => {
+            return {
+              ...data[key],
+              start: new Date(data[key].start),
+              end: new Date(data[key].end),
+            };
+          });
+          setEvents(newEvents);
+        }
+      });
+    }
+  }, [user, store.getState().uid]); 
+  
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   const handleEventClick = (event) => {
@@ -82,7 +102,9 @@ export  function MyCalendar() {
 
   return (
     <div className={styles.calendarWrapper}>
-      <button onClick={handleLogout}>Logout</button>
+      <div className={styles.logOutwrapper}>
+        <button onClick={handleLogout}>Logout</button>
+      </div>
       <div className={styles.calendar}>
         <Calendar 
           localizer={localizer}

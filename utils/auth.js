@@ -14,11 +14,12 @@ export async function login(username, password) {
         const isMatch = await bcrypt.compare(password, user.password);
         if (isMatch) {
           store.dispatch({ type: 'SET_UID', payload: uid });
-
+          console.log(uid)
           // Get events for the user from Firebase and store them in the store
-          const eventsRef = ref(db, `UserData/${uid}/events`);
+          const eventsRef = ref(db, `UserData/${uid}`);
           onValue(eventsRef, (snapshot) => {
-            const eventsData = snapshot.val();
+            const eventsData = snapshot.val().events;
+            console.log(eventsData)
             const events = Object.keys(eventsData || {}).map((key) => {
               return {
                 title: eventsData[key].title,
@@ -26,10 +27,12 @@ export async function login(username, password) {
                 end: new Date(eventsData[key].end),
                 description: eventsData[key].description,
               };
+
             });
+            console.log(events)
             store.dispatch({ type: 'SET_EVENTS', payload: events });
           });
-          
+          localStorage.setItem('uid', uid);
           return user;
         } else {
           console.log('Password does not match!');

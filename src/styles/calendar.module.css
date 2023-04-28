@@ -1,4 +1,17 @@
+.logOutwrapper{
+   width: 100%;
+   margin-bottom: 3px;
+   
+}
+.logOutwrapper button{
+   border: none;
+   box-shadow: rgba(0, 0, 0, 0.2) 0px 60px 40px -7px;   max-width: 50px;
+   max-height: 30px;
+   margin: 2px;
+   font-size: 11px;
+   font-family: 'InterLight';
 
+}
 .calendarWrapper {
   height: calc(100vh - 80px);
   display: flex;
@@ -160,3 +173,4 @@ line-height: 18px;
 font-family: 'InterMedium';
 
  }
+ 
