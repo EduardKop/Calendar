@@ -1,0 +1,134 @@
+
+.calendarWrapper {
+  height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #F6F6F6;
+}
+
+.calendar {
+  height: 100%;
+  width: 100%;
+  
+}
+
+.rbc_btn_group{
+   display: flex;
+   flex-direction: row;
+   align-content: center;
+   align-items: center;
+   margin-left: 24px;
+ }
+
+ .rbc_btn_group img{
+   height: 12px;
+   width: 6px;
+   cursor: pointer;
+
+ }
+
+ .rbc_toolbar_label{
+  min-width: 132px;
+  text-align: center;
+  font-weight: 600;
+   font-size: 16px;
+   line-height: 30px;
+  font-family: 'InterRegular';
+  color: #343434;
+ }
+
+ .rbc_btn_group{
+   font-family: 'InterRegular';
+   font-weight: 600;
+   color: #343434;
+
+   border: 1px solid black;
+   min-width:  194px;
+   display: flex;
+   justify-content: space-around;
+      padding: 4px 16px;
+   gap: 16px;
+   height: 40px;
+   border: 1px solid #FFC010;
+   border-radius: 12px;
+ }
+
+ .control_elements{
+   display: flex;
+   margin-right: 78px;
+   
+ }
+
+ .current_date{
+   margin-left: 85px;
+ }
+ .current_date h1{
+font-family: 'InterBold';
+font-weight: 700;
+font-size: 24px;
+line-height: 30px;
+/* identical to box height, or 125% */
+
+
+color: #3D3D3D;
+ }
+
+ .rbc_btn_group select{
+  border: none;
+  background-color: transparent;
+  width: 100%;
+  outline: none;
+
+ }
+ .rbc_btn_group_option{
+   background-color: red;
+ }
+ .rbc_dropdown {
+   position: relative;
+ }
+ .rbc_dropdown:hover {
+   cursor: pointer;
+ }
+ 
+ .rbc_dropdown_list {
+   position: absolute;
+   top: 100%;
+   left: 50%;
+   transform: translateX(-25%);
+   z-index: 9999;
+   display: block;
+   min-width: 150px;
+  align-items: center;
+   list-style: none;
+   border: 1px solid #ddd;
+   border-radius: 8px;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   background-color:#F6F6F6 ;
+ }
+    
+ .rbc_dropdown_list li {
+   display: block;
+   padding: 5px 10px;
+   cursor: pointer;
+   align-items: center;
+
+ }
+ 
+ .rbc_dropdown_list li:hover {
+   background-color: #E6E6E6;
+ }
+ 
+ .rbc_dropdown_list_img img{
+   height: 6px;
+   width: 12px;
+ }
+ .rbc_dropdown_list_img {
+   display: flex;
+   flex-direction: row;
+   align-content: center;
+   justify-content: center;
+   align-items: center;
+
+ }

@@ -9,15 +9,23 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@fullcalendar/daygrid": "^6.1.6",
-    "@fullcalendar/react": "^6.1.6",
+    "@fullcalendar/common": "^5.11.4",
+    "@fullcalendar/list": "^6.1.6",
     "@fullcalendar/timegrid": "^6.1.6",
     "bcrypt": "^5.1.0",
     "bcryptjs": "^2.4.3",
     "firebase": "^9.20.0",
     "fs": "^0.0.1-security",
+    "moment": "^2.29.4",
     "next": "13.3.1",
+    "prop-types": "^15.8.1",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-big-calendar": "^1.6.9",
+    "react-dom": "18.2.0",
+    "sass": "^1.62.1"
+  },
+  "devDependencies": {
+    "node-sass": "^7.0.3",
+    "sass-loader": "^13.2.2"
   }
 }
