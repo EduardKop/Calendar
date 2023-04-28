@@ -27,8 +27,10 @@ export default function Home() {
   const handleLogin = async (event) => {// Event handler for login form submission
     event.preventDefault() 
     const userData = await login(loginValue, passwordValue);
+      
       if (userData) { // If login was successful
-        setUser(userData);
+        setUser(userData);   
+        
       } 
       else{ // If login was unsuccessful
         console.log('не вірні данні')

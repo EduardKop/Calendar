@@ -5,7 +5,7 @@ import { Calendar, momentLocalizer } from 'react-big-calendar';
 import styles from '@/styles/calendar.module.css'
 import 'react-big-calendar/lib/sass/styles.scss';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import CustomToolbar from '@/components/customToolbarCalendar';
+import CustomToolbar from '@/components/CustomToolbarCalendar';
 
 import moment from 'moment';//time lib
 
@@ -27,6 +27,9 @@ export  function MyCalendar() {
      router.push('/');
    }},[user])
 
+
+   
+
  
   return (
     <div className={styles.calendarWrapper}>
@@ -43,22 +46,19 @@ export  function MyCalendar() {
         className={styles.calendar}
         style={{
             height: '100%',
-            width: '100%',
-            backgroundColor: '#F6F6F6',
+            width: '90%',
+            backgroundColor: '#FFFF',
             border: 'none',
             }}
         events={[
+            
             {
-            title: 'Event 1',
-            start: moment().toDate(),
-            end: moment().add(1, 'hours').toDate(),
-            },
-            {
-            title: 'Event 2',
-            start: moment().add(1, 'days').toDate(),
-            end: moment().add(1, 'days').add(2, 'hours').toDate(),
-            },
+              title: 'Event 2',
+              start: moment('2023-05-01').toDate(),
+              end: moment('2023-05-02').toDate(),
+              }
           ]}
+          selectable={false}
         />
       </div>
     </div>

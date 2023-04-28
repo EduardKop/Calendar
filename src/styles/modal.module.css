@@ -1,0 +1,58 @@
+.form_group{
+   padding: 5px;
+}
+.form_group input{
+   height: 52px;
+   border: 1px solid #E9E5D9;
+   border-radius: 16px;
+   
+}
+
+.modal_control{
+   margin-top: 50px;
+   display: flex;
+   flex-direction: row;
+   justify-content: flex-end;
+}
+
+.save_btn{
+   min-width: 148px!important;
+   height: 56px!important;
+   background: #FFC010!important;
+   border-radius: 16px!important;
+   font-style: normal!important;
+font-weight: 700!important;
+font-size: 16px!important;
+font-family: 'InterMedium'!important;
+border: none!important;
+
+}
+.save_btn:hover{
+   background-color: #ff9b54!important;
+
+
+}
+.cancel_btn{
+   min-width: 148px!important;
+   height: 56px!important;
+   background: transparent!important;
+   border-radius: 16px!important;
+   font-style: normal!important;
+font-weight: 700!important;
+font-size: 16px!important;
+margin-right: 5px!important;
+color: #3D3D3D!important;
+border: none!important;
+font-family: 'InterMedium'!important;
+
+
+}
+
+.cancel_btn:hover{
+  background-color: rgb(237, 79, 79)!important;
+}
+
+.form_group input:focus {
+   border-color: #E9E6DA!important;
+   box-shadow: none!important;
+ }

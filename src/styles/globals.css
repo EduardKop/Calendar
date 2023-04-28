@@ -42,10 +42,82 @@
  
 }
 .rbc-header span{
-  font-family: 'InterLight';
+  font-family: 'InterRegular';
 
   font-style: normal;
   font-weight: 400;
   font-size: 16px;
   line-height: 30px;
+}
+.rbc-month-view{
+  margin-top: 50px;
+  border: none!important;
+}
+
+
+
+.rbc-day-bg {
+  background-color: #FFFFFF;
+  color: #3D3D3D;
+}
+.rbc-off-range-bg {
+  background-color: #FFFFFF!important;
+  color: #828282;
+}
+
+.rbc-today {
+  background-color: transparent!important;
+  display: flex;
+    
+  align-items: center;
+}
+.rbc-now button{
+  background-color: #FFC010!important;
+  border-radius: 100%;
+  width: 30px;
+  height: 30px;
+  color: white;
+    
+  }
+  .rbc-button-link {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  .rbc-now button{
+    font-family: 'InterLight';
+    font-weight: 200;
+    display: flex;
+    align-items: center;
+  }
+.modal-dialog{
+  margin-left: 60%!important;
+}
+.modal-header{
+  border: none!important;
+}
+.modal-content{
+  border-radius: 16px!important;
+  border: none!important;
+}
+.modal-title{
+  font-family: 'InterBold';
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 30px;
+  color: #3D3D3D!important;
+  margin-left: 10px;
+}
+.modal-blur {
+  backdrop-filter: blur(3px)!important;
+  
+}
+.rbc-current{
+  display: flex;
+    align-items: center;
+}
+.rbc-now {
+  display: flex;
+  align-items: center;
 }
