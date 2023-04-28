@@ -1,12 +1,17 @@
 
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react';
+import { Tooltip } from 'react-tooltip'
+
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { ref, onValue, set } from "firebase/database";
 // Styles
+import randomColor from 'randomcolor';
 import styles from '@/styles/calendar.module.css'
 import 'react-big-calendar/lib/sass/styles.scss';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
+import 'react-tooltip/dist/react-tooltip.css'
+
 // Components
 import CustomToolbar from '@/components/CustomToolbarCalendar';
 // Libraries
@@ -14,7 +19,7 @@ import moment from 'moment';//time lib
 import store from '../../utils/store';
 import { db } from '../../src/lib/firebase';
 
-export  function MyCalendar() {
+ function MyCalendar() {
   const [events, setEvents] = useState([]);
   const [user, setUser] = useState(true); // default user state
   const router = useRouter();
@@ -66,9 +71,9 @@ export  function MyCalendar() {
           });
     }
   }, [user]);
-  
+
   useEffect(() => {
-    const uid = store.getState().uid;
+    const uid = localStorage.getItem('uid');
     if (uid && user) {
       const eventsRef = ref(db, `UserData/${uid}/events`);
       onValue(eventsRef, (snapshot) => {
@@ -94,12 +99,31 @@ export  function MyCalendar() {
   };
   
   const Event = ({ event }) => (
-    <div className={styles.event}>
-      <div className={styles.eventTitle}>{event.title}</div>
-      <div className={styles.eventDescription}>{event.description}</div>
+    <div >
+      <div
+        className={styles.eventTitle}
+        title={event.description}
+      >
+        {event.title}
+      </div>
     </div>
   );
-
+  
+  
+  const eventStyleGetter = (event, start, end, isSelected) => {
+    const color = randomColor({ luminosity: 'light' });
+    return {
+      style: {
+        backgroundColor: color,
+        borderRadius: '5px',
+        opacity: 0.8,
+        color: 'black',
+        border: '0px',
+        display: 'block'
+      }
+    };
+  };
+  
   return (
     <div className={styles.calendarWrapper}>
       <div className={styles.logOutwrapper}>
@@ -111,6 +135,8 @@ export  function MyCalendar() {
           startAccessor="start"
           endAccessor="end"
           formats={formats}
+          eventPropGetter={eventStyleGetter}
+
           titleAccessor={event => event.description}
           components={{
             toolbar: CustomToolbar,
@@ -126,6 +152,7 @@ export  function MyCalendar() {
           events={events}
           selectable={false}
         />
+
       </div>
     </div>
   );  

@@ -1,7 +1,7 @@
 import React,{ useState } from 'react';
 import { useDispatch } from 'react-redux';
 import store from '../../utils/store';
-
+ 
 // Firebase imports
 import { db } from '../lib/firebase';
 import { getDatabase, onValue, ref, get , push , set } from "firebase/database";
@@ -11,6 +11,7 @@ import Image from 'next/image'
 import { Modal, Button } from 'react-bootstrap';
 
 // Styling imports
+import randomColor from 'randomcolor';
 import styles from '@/styles/calendar.module.css'
 import stylesMadal from '@/styles/modal.module.css'
 import 'react-big-calendar/lib/sass/styles.scss';
@@ -68,7 +69,7 @@ const CustomToolbar = (toolbar) => {
         // const uid = store.getState().uid;
         const uid = localStorage.getItem('uid');
         console.log(uid);
-        const eventsRef = ref(db, `UserData/${uid}/events/${event.title}`);//add events to firebase db
+        const eventsRef = ref(db, `UserData/${uid}/events/${eventName}`);//add events to firebase db
         // onValue(eventsRef, (snapshot) => {
         //   const data = snapshot.val()
         //   console.log(data)
@@ -109,6 +110,8 @@ const CustomToolbar = (toolbar) => {
    
 
    
+  
+  
    return (
      <div className="rbc-toolbar">
  

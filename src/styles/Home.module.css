@@ -231,9 +231,7 @@
  }
  @media (max-width: 1133px) { 
   .imageContainer {
-    transform: rotate(270deg);
-   width: 35%;
-   margin: 0px;
+  display: none;
 
   }
 }

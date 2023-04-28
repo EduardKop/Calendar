@@ -14,12 +14,13 @@ export async function login(username, password) {
         const isMatch = await bcrypt.compare(password, user.password);
         if (isMatch) {
           store.dispatch({ type: 'SET_UID', payload: uid });
-          console.log(uid)
-          // Get events for the user from Firebase and store them in the store
-          const eventsRef = ref(db, `UserData/${uid}`);
+
+          // Clear previous user's events from store
+          store.dispatch({ type: 'SET_EVENTS', payload: [] });
+
+          const eventsRef = ref(db, `UserData/${uid}/events`);
           onValue(eventsRef, (snapshot) => {
-            const eventsData = snapshot.val().events;
-            console.log(eventsData)
+            const eventsData = snapshot.val();
             const events = Object.keys(eventsData || {}).map((key) => {
               return {
                 title: eventsData[key].title,
@@ -27,7 +28,6 @@ export async function login(username, password) {
                 end: new Date(eventsData[key].end),
                 description: eventsData[key].description,
               };
-
             });
             console.log(events)
             store.dispatch({ type: 'SET_EVENTS', payload: events });
@@ -44,3 +44,4 @@ export async function login(username, password) {
   }
   return null;
 }
+

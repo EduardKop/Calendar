@@ -121,3 +121,6 @@
   display: flex;
   align-items: center;
 }
+/* .rbc-event {
+  background-color: var(--event-background-color) !important;
+} */
