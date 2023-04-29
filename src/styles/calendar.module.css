@@ -1,16 +1,41 @@
 .logOutwrapper{
-   width: 100%;
-   margin-bottom: 3px;
-   
+  display: flex;
+  margin-left: 20px;
+  background-color: #FFC010;
+  border: none!important;
+  border-color: transparent!important;
+  border-radius: 12px!important;
+  
+}
+
+.logOutwrapper button:hover{
+ background-color: #FFC010!important;
+ border-radius: 12px!important;
+ 
 }
 .logOutwrapper button{
-   border: none;
-   box-shadow: rgba(0, 0, 0, 0.2) 0px 60px 40px -7px;   max-width: 50px;
-   max-height: 30px;
-   margin: 2px;
-   font-size: 11px;
-   font-family: 'InterLight';
+  color: white!important;
+  border: none!important;
+  border-color: transparent!important;
+  cursor: pointer;
+  margin-left: 24px;
+  border-radius: 12px;
+  min-width: 70px;
+  font-size: 16px!important;
+   font-family: 'InterMedium';
 
+}
+@media (max-width: 806px) {
+  .logOutwrapper {
+    margin-top: 10px;
+    margin-left: 24px;
+    height: 40px;
+  }
+}
+@media (max-width: 695px) {
+  .logOutwrapper {
+    margin-left: 0px;
+  }
 }
 .calendarWrapper {
   height: calc(100vh - 80px);
@@ -19,6 +44,8 @@
   align-items: center;
   justify-content: center;
   background-color: #FFFF;
+  border: none;
+  border-color: transparent;
 }
 
 .calendar {
@@ -165,7 +192,30 @@ align-items: center;
 justify-content: center;
 
  }
+ @media only screen and (max-width: 695px) {
 
+  .rbc_btn_group{
+    min-width: 210px;
+    margin-top: 10px;
+    margin: 0px;
+    margin-top: 10px;
+  }
+  .rbc_btn_add_tasks {
+    margin-top: 10px;
+    min-width: 210px;
+    height: 40px;
+    padding: 4px 16px;
+    margin: 0px;
+    margin-top: 10px;
+  }
+  .control_elements{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    
+  }
+}
  .rbc_btn_add_tasks span{
    margin-left: 13px;
    color: white;
@@ -206,3 +256,4 @@ height: 200px;
      margin: 0 auto;
    }
  }
+ 

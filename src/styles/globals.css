@@ -137,3 +137,15 @@
 .calendar_control_elements__YvpG3{
   flex-wrap: wrap;
 }
+@media only screen and (max-width: 695px) {
+  .rbc-toolbar{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 10px;
+    font-size: 16px;
+    justify-content: center;
+    flex-direction: column;
+
+  }
+}

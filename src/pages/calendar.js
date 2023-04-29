@@ -1,15 +1,15 @@
 
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react';
-import { Tooltip } from 'react-tooltip'
-import { useHistory } from 'react-router-dom';
-import { getAuth } from 'firebase/auth';
+import { Modal } from 'react-bootstrap';
+import {  Button } from 'react-bootstrap';
 
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { ref, onValue, set } from "firebase/database";
 import { app } from '../../src/lib/firebase'; 
-import firebase, { auth } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 import 'firebase/auth';
+
 // Styles
 import randomColor from 'randomcolor';
 import styles from '@/styles/calendar.module.css'
@@ -24,11 +24,12 @@ import moment from 'moment';//time lib
 import store from '../../utils/store';
 import { db } from '../../src/lib/firebase';
 
-import  logout  from '../../utils/logout';
+
 
 
  function MyCalendar() {
   const auth = getAuth(app);
+  const [eventColors, setEventColors] = useState({});
   const [events, setEvents] = useState([]);
   const [user, setUser] = useState(true); // default user state
   const router = useRouter();
@@ -37,23 +38,7 @@ import  logout  from '../../utils/logout';
   const formats = { // React-big-calendar options
         weekdayFormat: (date, culture, localizer) => localizer.format(date, 'dddd', culture)};
  
-        const handleLogout = async () => {
-          console.log('Logging out...');
-          auth
-            .signOut()
-            .then(function () {
-              console.log('Logout successful.');
-              localStorage.removeItem('uid'); // remove uid from local storage
-              localStorage.removeItem('event'); // remove uid from local storage
-              store.dispatch({ type: 'SET_UID', uid: null }); // set uid to null in store
-              store.dispatch({ type: 'SET_EVENT', event: null }); // set event to null in store
-              router.push('/');
-            })
-            .catch(function (error) {
-              console.log('Logout failed:', error);
-            });
-        };
-      
+       
   useEffect(() => { // Save event to Firebase when store changes
     const unsubscribe = store.subscribe(() => {
       const { event, uid } = store.getState();
@@ -114,60 +99,128 @@ import  logout  from '../../utils/logout';
       });
     }
   }, [user, store.getState().uid]); 
-  
+  useEffect(() => {
+    const uid = localStorage.getItem('uid');
+    if (uid) {
+      const eventsRef = ref(db, `UserData/${uid}/events`);
+      onValue(eventsRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          const newEvents = Object.keys(data).map((key) => {
+            const color = eventColors[key] || randomColor({ luminosity: 'light' });
+            return {
+              ...data[key],
+              start: new Date(data[key].start),
+              end: new Date(data[key].end),
+              color,
+            };
+          });
+          setEvents(newEvents);
+        }
+      });
+    }
+  }, [eventColors]);
+
   const [selectedEvent, setSelectedEvent] = useState(null);
 
   const handleEventClick = (event) => {
     setSelectedEvent(event);
   };
   
-  const Event = ({ event }) => (
-    <div >
-      <div
-        className={styles.eventTitle}
-        title={event.description}
-      >
-        {event.title}
+  function my(){
+    console.log('sfssf')
+  }
+  const Event = ({ event }) => {
+    const [showModal, setShowModal] = useState(false);
+  
+    const handleClose = () => setShowModal(false);
+    const handleShow = () => setShowModal(true);
+  
+    return (
+      <div >
+        <div className={styles.eventTitle} title={event.description} onClick={handleShow}>
+          {event.title}
+        </div>
+        <Modal show={showModal} className={styles.modalDescription} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>{event.title}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>{event.description}</Modal.Body>
+          <Modal.Footer>
+           
+          </Modal.Footer>
+        </Modal>
       </div>
-    </div>
-  );
+    );
+  };
   
+  const handleEventDrop = ({ event, start, end }) => {
+    const uid = store.getState().uid;
+    const eventRef = ref(db, `UserData/${uid}/events/${event.title}`);
   
+    set(eventRef, {
+      ...event,
+      start,
+      end,
+    });
+  };
   const eventStyleGetter = (event, start, end, isSelected) => {
-    const color = randomColor({ luminosity: 'light' });
     return {
       style: {
-        backgroundColor: color,
+        backgroundColor: event.color,
         borderRadius: '5px',
         opacity: 0.8,
         color: 'black',
         border: '0px',
-        display: 'block'
-      }
+        display: 'block',
+      },
     };
   };
+
   
+  const onDropFromOutside = ({ start, end, allDay }) => {
+    const title = window.prompt('Event name');
+    if (title) {
+      const uid = store.getState().uid;
+      const eventRef = ref(db, `UserData/${uid}/events/${title}`);
+  
+      set(eventRef, {
+        title,
+        start,
+        end,
+        allDay,
+      });
+    }
+  };
+  
+  const handleSelect = ({ start, end }) => {
+    const title = window.prompt('Event name');
+    if (title) {
+      const uid = store.getState().uid;
+      const eventRef = ref(db, `UserData/${uid}/events/${title}`);
+  
+      set(eventRef, {
+        title,
+        start,
+        end,
+        allDay: false,
+      });
+    }
+  };
   return (
     <div className={styles.calendarWrapper}>
-      <div className={styles.logOutwrapper}>
-        {/* <button onClick={handleLogout}>Logout</button> */}
-        <button onClick={() => handleLogout()}>
-      Logout
-    </button>
-
-      </div>
+      
       <div className={styles.calendar}>
-        <Calendar 
+      <Calendar
           localizer={localizer}
           startAccessor="start"
           endAccessor="end"
+          titleAccessor={(event) => event.description}
           formats={formats}
           eventPropGetter={eventStyleGetter}
-
-          titleAccessor={event => event.description}
           components={{
             toolbar: CustomToolbar,
-            event: Event
+            event: Event,
           }}
           className={styles.calendar}
           style={{
@@ -178,6 +231,9 @@ import  logout  from '../../utils/logout';
           }}
           events={events}
           selectable={false}
+          onSelectEvent={handleEventClick}
+          onSelectSlot={handleSelect}
+          onEventDrop={handleEventDrop}
         />
 
       </div>

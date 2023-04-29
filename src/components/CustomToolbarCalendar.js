@@ -2,10 +2,12 @@ import React,{ useState } from 'react';
 import { useDispatch } from 'react-redux';
 import store from '../../utils/store';
 import { useRouter } from 'next/router';
+import { getAuth } from 'firebase/auth';
 
 // Firebase imports
 import { db } from '../lib/firebase';
 import { getDatabase, onValue, ref, get , push , set } from "firebase/database";
+import { app } from '../../src/lib/firebase'; 
 
 // UI component imports
 import Image from 'next/image'
@@ -31,7 +33,8 @@ import plusButtonImg from '../../public/images/plus.png'
 
 
 const CustomToolbar = (toolbar) => {
-   
+  const auth = getAuth(app);
+
     const goToPrev = () => {toolbar.onNavigate('PREV');}; //OnClick Lower the month 
     const goToNext = () => {toolbar.onNavigate('NEXT');}; //OnClick Upper the month 
  
@@ -106,8 +109,24 @@ const CustomToolbar = (toolbar) => {
     };
    const toggleDropdown = () => setShowDropdown(!showDropdown);
    
-
    
+   const handleLogout = async () => {
+    console.log('Logging out...');
+    auth
+      .signOut()
+      .then(function () {
+        console.log('Logout successful.');
+        localStorage.removeItem('uid'); // remove uid from local storage
+        localStorage.removeItem('event'); // remove uid from local storage
+        store.dispatch({ type: 'SET_UID', uid: null }); // set uid to null in store
+        store.dispatch({ type: 'SET_EVENT', event: null }); // set event to null in store
+        router.push('/');
+      })
+      .catch(function (error) {
+        
+      });
+  };
+
   
   
    return (
@@ -131,10 +150,10 @@ const CustomToolbar = (toolbar) => {
             onClick={goToNext}/> 
          </div>
  
-         <div className={styles.rbc_btn_group}>
+         <div className={styles.rbc_btn_group}           onClick={toggleDropdown}
+>
          <div
            className={styles.rbc_dropdown}
-           onClick={toggleDropdown}
            onBlur={() => setShowDropdown(false)}
            tabIndex={0}
          >
@@ -169,6 +188,12 @@ const CustomToolbar = (toolbar) => {
           /> 
           <span>Add Event</span>
          </div> 
+         <div className={styles.logOutwrapper}>
+              <button onClick={() => handleLogout()}>
+              Logout
+            </button>
+
+      </div>
        </div>
 
 
