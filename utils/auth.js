@@ -19,19 +19,19 @@ export async function login(username, password) {
           store.dispatch({ type: 'SET_EVENTS', payload: [] });
 
           const eventsRef = ref(db, `UserData/${uid}/events`);
-          onValue(eventsRef, (snapshot) => {
-            const eventsData = snapshot.val();
-            const events = Object.keys(eventsData || {}).map((key) => {
-              return {
-                title: eventsData[key].title,
-                start: new Date(eventsData[key].start),
-                end: new Date(eventsData[key].end),
-                description: eventsData[key].description,
-              };
-            });
-            console.log(events)
-            store.dispatch({ type: 'SET_EVENTS', payload: events });
-          });
+          // onValue(eventsRef, (snapshot) => {
+          //   const eventsData = snapshot.val();
+          //   const events = Object.keys(eventsData || {}).map((key) => {
+          //     return {
+          //       title: eventsData[key].title,
+          //       start: new Date(eventsData[key].start),
+          //       end: new Date(eventsData[key].end),
+          //       description: eventsData[key].description,
+          //     };
+          //   });
+          //   console.log(events)
+          //   store.dispatch({ type: 'SET_EVENTS', payload: events });
+          // });
           localStorage.setItem('uid', uid);
           return user;
         } else {

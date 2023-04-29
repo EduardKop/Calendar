@@ -45,17 +45,18 @@ const CustomToolbar = (toolbar) => {
       eventDescription: '',
     });
     const [showDropdown, setShowDropdown] = useState(false);
+    const [eventAdded, setEventAdded] = useState(false);
 
     const dispatch = useDispatch();
 
 
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
       e.preventDefault();
       const now = new Date().toISOString().split('T')[0];
-      if (eventStartDate < now) {//Time Err Handler
+      if (eventStartDate < now) {
         alert(`Обарана дата - ${eventStartDate} не може бути добавлена, введіть коректну дату - сьогоднішню або майбутню 🙂`);
-      return;
+        return;
       }
       const event = {
         title: eventName,
@@ -63,30 +64,24 @@ const CustomToolbar = (toolbar) => {
         end: eventStartDate,
         description: eventDescription,
       };
-      dispatch({ type: 'SET_EVENT', payload: event });
-     
       try {
-        // const uid = store.getState().uid;
         const uid = localStorage.getItem('uid');
         console.log(uid);
-        const newEventRef = push(ref(db, `UserData/${uid}/events`));//add events to firebase db
-        // onValue(eventsRef, (snapshot) => {
-        //   const data = snapshot.val()
-        //   console.log(data)
-        // })
-        set(newEventRef, {
-          title: event.title,
-          start: event.start,
-          end: event.end,
-          description: event.description,
-        });
-        setShowModal(false);
+        if (!eventAdded) {
+          const newEventRef = push(ref(db, `UserData/${uid}/events`));
+          set(newEventRef, {
+            title: event.title,
+            start: event.start,
+            end: event.end,
+            description: event.description,
+          });
+          setEventAdded(true);
+        }
+      } catch (err) {
+        console.log(err)
       }
-      catch(err){
-      console.log(err)
-      }
+      setShowModal(false);
     };
-
 
     const handleCloseModal = (e) => {//close modal -Close btn-
     e.preventDefault();
@@ -122,9 +117,11 @@ const CustomToolbar = (toolbar) => {
          <div className={styles.rbc_btn_group}>
          <Image
             src={arrowLeftImg}
+            alt='img'
             onClick={goToPrev}/> 
          <div className={styles.rbc_toolbar_label}>{currentDate}</div>
            <Image
+            alt='img'
             src={arrowRightImg}
             onClick={goToNext}/> 
          </div>
@@ -153,7 +150,7 @@ const CustomToolbar = (toolbar) => {
          </div>
          <div  className={styles.rbc_dropdown_list_img}>
          <Image
-           
+            alt='img'
             src={arrowDownImg}
             onClick={toggleDropdown}/> 
            </div>
@@ -163,6 +160,7 @@ const CustomToolbar = (toolbar) => {
 >
          <Image
            src={plusButtonImg}
+           alt='btn'
           /> 
           <span>Add Event</span>
          </div> 
