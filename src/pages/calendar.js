@@ -2,9 +2,14 @@
 import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react';
 import { Tooltip } from 'react-tooltip'
+import { useHistory } from 'react-router-dom';
+import { getAuth } from 'firebase/auth';
 
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import { ref, onValue, set } from "firebase/database";
+import { app } from '../../src/lib/firebase'; 
+import firebase, { auth } from 'firebase/app';
+import 'firebase/auth';
 // Styles
 import randomColor from 'randomcolor';
 import styles from '@/styles/calendar.module.css'
@@ -19,18 +24,36 @@ import moment from 'moment';//time lib
 import store from '../../utils/store';
 import { db } from '../../src/lib/firebase';
 
+import  logout  from '../../utils/logout';
+
+
  function MyCalendar() {
+  const auth = getAuth(app);
   const [events, setEvents] = useState([]);
   const [user, setUser] = useState(true); // default user state
   const router = useRouter();
   const localizer = momentLocalizer(moment);
-
+  
   const formats = { // React-big-calendar options
         weekdayFormat: (date, culture, localizer) => localizer.format(date, 'dddd', culture)};
  
-  const handleLogout = () => {//Logout button logic
-        setUser(null);};
-
+        const handleLogout = async () => {
+          console.log('Logging out...');
+          auth
+            .signOut()
+            .then(function () {
+              console.log('Logout successful.');
+              localStorage.removeItem('uid'); // remove uid from local storage
+              localStorage.removeItem('event'); // remove uid from local storage
+              store.dispatch({ type: 'SET_UID', uid: null }); // set uid to null in store
+              store.dispatch({ type: 'SET_EVENT', event: null }); // set event to null in store
+              router.push('/');
+            })
+            .catch(function (error) {
+              console.log('Logout failed:', error);
+            });
+        };
+      
   useEffect(() => { // Save event to Firebase when store changes
     const unsubscribe = store.subscribe(() => {
       const { event, uid } = store.getState();
@@ -127,7 +150,11 @@ import { db } from '../../src/lib/firebase';
   return (
     <div className={styles.calendarWrapper}>
       <div className={styles.logOutwrapper}>
-        <button onClick={handleLogout}>Logout</button>
+        {/* <button onClick={handleLogout}>Logout</button> */}
+        <button onClick={() => handleLogout()}>
+      Logout
+    </button>
+
       </div>
       <div className={styles.calendar}>
         <Calendar 

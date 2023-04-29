@@ -1,7 +1,8 @@
 import React,{ useState } from 'react';
 import { useDispatch } from 'react-redux';
 import store from '../../utils/store';
- 
+import { useRouter } from 'next/router';
+
 // Firebase imports
 import { db } from '../lib/firebase';
 import { getDatabase, onValue, ref, get , push , set } from "firebase/database";
@@ -50,6 +51,7 @@ const CustomToolbar = (toolbar) => {
     const dispatch = useDispatch();
 
 
+    const router = useRouter();
 
     const handleFormSubmit = async (e) => {
       e.preventDefault();
@@ -66,21 +68,24 @@ const CustomToolbar = (toolbar) => {
       };
       try {
         const uid = localStorage.getItem('uid');
-        console.log(uid);
-        if (!eventAdded) {
-          const newEventRef = push(ref(db, `UserData/${uid}/events`));
-          set(newEventRef, {
-            title: event.title,
-            start: event.start,
-            end: event.end,
-            description: event.description,
-          });
-          setEventAdded(true);
+        if (uid) {
+          if (!eventAdded) {
+            const newEventRef = push(ref(db, `UserData/${uid}/events`));
+            set(newEventRef, {
+              title: event.title,
+              start: event.start,
+              end: event.end,
+              description: event.description,
+            });
+            setEventAdded(true);
+          }
+          setShowModal(false);
+        } else {
+          router.push('/');
         }
       } catch (err) {
         console.log(err)
       }
-      setShowModal(false);
     };
 
     const handleCloseModal = (e) => {//close modal -Close btn-
