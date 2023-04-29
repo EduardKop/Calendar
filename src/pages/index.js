@@ -16,6 +16,7 @@ export default function Home() {
   const [loginValue,setLoginValue]  = useState('');
   const [passwordValue,setPasswordValue]  = useState('');
   const [showPassword,setShowPassword]  = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [user,setUser]  = useState(null);
   const router = useRouter();
 
@@ -26,6 +27,10 @@ export default function Home() {
 
   const handleLogin = async (event) => {// Event handler for login form submission
     event.preventDefault() 
+    if (!loginValue || !passwordValue) { // перевірка на заповненість полів
+      setErrorMessage('Заповніть усі поля');
+      return;
+    }
     const userData = await login(loginValue, passwordValue);
       
       if (userData) { // If login was successful
@@ -33,7 +38,7 @@ export default function Home() {
         
       } 
       else{ // If login was unsuccessful
-        console.log('не вірні данні')
+        setErrorMessage('Невірний Логін або Пароль');
       }
   }
 
@@ -53,7 +58,8 @@ export default function Home() {
            />
         </div>
         <form className={styles.form}>
-          
+        <div className={styles.errorMessage}>{errorMessage}</div>
+
           <label htmlFor="login" className={styles.label}>
             <input type="text" id="username"  placeholder='Login' className={styles.input} onChange={handleLoginChange}/>
           </label>
